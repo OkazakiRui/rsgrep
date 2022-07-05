@@ -9,8 +9,14 @@ fn run_cat(path: String) {
 }
 
 fn main() {
-    match args().nth(1) {
-        Some(path) => run_cat(path),
-        None => println!("Usage: cat <file>"),
+    // match args().nth(1) {
+    //     Some(path) => run_cat(path),
+    //     None => println!("Usage: cat <file>"),
+    // }
+
+    if let Some(path) = args().nth(1) {
+        run_cat(path);
+    } else {
+        println!("Usage: cat <file>");
     }
 }
