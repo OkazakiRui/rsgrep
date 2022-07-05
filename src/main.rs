@@ -1,7 +1,7 @@
+use std::env::args;
 use std::fs::read_to_string;
 
-fn run_cat() {
-    let path = "./src/main.rs";
+fn run_cat(path: String) {
     match read_to_string(path) {
         Ok(contents) => println!("{}", contents),
         Err(e) => println!("{}", e),
@@ -9,5 +9,8 @@ fn run_cat() {
 }
 
 fn main() {
-    run_cat();
+    match args().nth(1) {
+        Some(path) => run_cat(path),
+        None => println!("Usage: cat <file>"),
+    }
 }
