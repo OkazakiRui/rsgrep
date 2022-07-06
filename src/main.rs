@@ -4,24 +4,26 @@ use structopt::StructOpt;
 #[derive(StructOpt)]
 #[structopt(name = "rsgrep", about = "Rust Grep command tool")]
 struct GrepArgs {
-    #[structopt(name = "FILE")]
-    path: String,
     #[structopt(name = "PATTERN")]
     pattern: String,
+    #[structopt(name = "FILE")]
+    path: Vec<String>,
 }
 
-fn grep(content: String, grep_args: &GrepArgs) {
+fn grep(content: String, grep_args: &GrepArgs, file_name: &str) {
     for line in content.lines() {
         if line.contains(grep_args.pattern.as_str()) {
-            println!("{}", line);
+            println!("{}: {}", file_name, line);
         }
     }
 }
 
 fn run(grep_args: GrepArgs) {
-    match read_to_string(&grep_args.path) {
-        Ok(contents) => grep(contents, &grep_args),
-        Err(e) => println!("{}", e),
+    for file in grep_args.path.iter() {
+        match read_to_string(file) {
+            Ok(contents) => grep(contents, &grep_args, file),
+            Err(e) => println!("{}", e),
+        }
     }
 }
 
