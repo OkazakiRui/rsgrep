@@ -19,12 +19,13 @@ fn grep(content: String, grep_args: &GrepArgs, file_name: &str) {
 }
 
 fn run(grep_args: GrepArgs) {
-    for file in grep_args.path.iter() {
-        match read_to_string(file) {
+    grep_args
+        .path
+        .iter()
+        .for_each(|file| match read_to_string(file) {
             Ok(contents) => grep(contents, &grep_args, file),
             Err(e) => println!("{}", e),
-        }
-    }
+        })
 }
 
 fn main() {
