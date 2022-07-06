@@ -1,18 +1,13 @@
-use std::env::args;
 use std::fs::read_to_string;
+use structopt::StructOpt;
 
+#[derive(StructOpt)]
+#[structopt(name = "rsgrep", about = "Rust Grep command tool")]
 struct GrepArgs {
-    pattern: String,
+    #[structopt(name = "FILE")]
     path: String,
-}
-impl GrepArgs {
-    fn new(pattern: String, path: String) -> GrepArgs {
-        GrepArgs { pattern, path }
-    }
-    fn print_pattern(self, user: String) {
-        let pat = self.pattern;
-        println!("from: {}, pattern: {}", user, pat);
-    }
+    #[structopt(name = "PATTERN")]
+    pattern: String,
 }
 
 fn grep(content: String, pattern: String) {
@@ -31,14 +26,5 @@ fn run(grep_args: GrepArgs) {
 }
 
 fn main() {
-    let path = args().nth(1);
-    let pattern = args().nth(2);
-
-    match (pattern, path) {
-        (Some(pattern), Some(path)) => run(GrepArgs::new(pattern, path)),
-        _ => println!("Usage: grep <pattern> <file>"),
-    }
-
-    GrepArgs::new("pattern".to_string(), String::from("path"))
-        .print_pattern(String::from("r_okazaki"));
+    run(GrepArgs::from_args());
 }
