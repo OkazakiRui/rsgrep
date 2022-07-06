@@ -1,12 +1,19 @@
 use std::env::args;
 use std::fs::read_to_string;
 
-// fn run_cat(path: String) {
-//     match read_to_string(path) {
-//         Ok(contents) => println!("{}", contents),
-//         Err(e) => println!("{}", e),
-//     }
-// }
+struct GrepArgs {
+    pattern: String,
+    path: String,
+}
+impl GrepArgs {
+    fn new(pattern: String, path: String) -> GrepArgs {
+        GrepArgs { pattern, path }
+    }
+    fn print_pattern(self, user: String) {
+        let pat = self.pattern;
+        println!("from: {}, pattern: {}", user, pat);
+    }
+}
 
 fn grep(content: String, pattern: String) {
     for line in content.lines() {
@@ -16,24 +23,22 @@ fn grep(content: String, pattern: String) {
     }
 }
 
-fn run(path: String, pattern: String) {
-    match read_to_string(path) {
-        Ok(contents) => grep(contents, pattern),
+fn run(grep_args: GrepArgs) {
+    match read_to_string(grep_args.path) {
+        Ok(contents) => grep(contents, grep_args.pattern),
         Err(e) => println!("{}", e),
     }
 }
 
 fn main() {
-    // match args().nth(1) {
-    //     Some(path) => run_cat(path),
-    //     None => println!("Usage: cat <file>"),
-    // }
-
-    let pattern = args().nth(1);
     let path = args().nth(1);
+    let pattern = args().nth(2);
 
     match (pattern, path) {
-        (Some(pattern), Some(path)) => run(path, pattern),
+        (Some(pattern), Some(path)) => run(GrepArgs::new(pattern, path)),
         _ => println!("Usage: grep <pattern> <file>"),
     }
+
+    GrepArgs::new("pattern".to_string(), String::from("path"))
+        .print_pattern(String::from("r_okazaki"));
 }
